@@ -20,6 +20,7 @@
    const scoreLabel = document.getElementById('score');
    const missLabel = document.getElementById('miss');
    const timerLabel = document.getElementById('timer');
+   let isPlaying = false;
 
    
 
@@ -40,6 +41,7 @@
         }, 10);
 
         if(timeLeft < 0) {
+            isPlaying = false;
             clearTimeout(timeoutId);
             timerLabel.textContent = '0.00';
             setTimeout(() => {
@@ -49,6 +51,10 @@
    }
 
    window.addEventListener('click', () => {
+     if(isPlaying === true) {
+        return;
+     }
+     isPlaying = true;
        target.textContent = word;
        startTime = Date.now();
        updateTimer();
@@ -57,7 +63,10 @@
 
 
     window.addEventListener('keydown' , e => {
-    if(e.key === word[loc]) {
+        if(isPlaying !== true) {
+            return;
+        }
+     if(e.key === word[loc]) {
         loc++;
         if (loc === word.length) {
             word = words[Math.floor(Math.random() * words.length)];
@@ -66,7 +75,7 @@
         updateTarget();
         score++;
         scoreLabel.textContent = score;
-    } else {
+     } else {
         miss++;
         missLabel.textContent = miss;
     }
